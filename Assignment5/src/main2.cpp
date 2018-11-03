@@ -1,0 +1,134 @@
+/****************************************************************************
+* Fichier     : Main.cpp
+* Auteur      : Jeffrey Leung 1867781 et Xavier Ralay 1786307
+* Travail     : TP5
+* Description : Main
+***************************************************************************/
+#include <iostream>
+#include <fstream>
+#include "ConteneurGenesListe.h"
+#include "ConteneurGenesMap.h"
+#include "ConteneurGenes.h"
+#include <utility>
+using namespace std;
+
+int main()
+{
+	char c;
+	ConteneurGenes* genes;
+	bool continuer = true;
+	// Le conteneur a deux implementations parmi lesquelles on choisit
+
+
+		cout << "---  Voulez-vous utiliser la version liste (1) ou la version map (2) ? " << endl;
+		do {
+			cin.get(c);
+		} while (c != '1' && c != '2');
+
+		if (c == '1') {
+			cout << "Utilisation de la version LISTE" << endl;
+			genes = new ConteneurGenesListe();
+		}
+		else {
+			cout << "Utilisation de la version MAP" << endl;
+			genes = new ConteneurGenesMap();
+		}
+
+		//	ouverture du fichier de donnees
+		ifstream fichier;
+		fichier.open("genes.txt");
+		if (fichier.fail()) {
+			cout << "Fichier non trouve !\n" << endl;
+			return 1;
+		}
+		// Lecture des entrees de chaque gene
+		string nom, description, espece, contenu, id;
+		getline(fichier, id);
+		while (!fichier.eof()) {
+			getline(fichier, nom);
+			getline(fichier, description);
+			getline(fichier, espece);
+			getline(fichier, contenu);
+			genes->inserer(atoi(id.c_str()), nom, description, espece, contenu);
+			getline(fichier, id);
+		}
+		fichier.close();
+
+
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "AFFICHAGE PAR ESPECE ET NOM\n" << endl;
+		// !!!!  A FAIRE: afficher les gènes par espèce et nom dans la sortie standard
+		genes->afficherParEspeceEtNom(cout);
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "RECHERCHE DU GENE 25107" << endl;
+		// !!!! A FAIRE: rechercher et afficher le gène ayant l'ID 25107
+		// Le programme doit afficher "Le gène 25107 n'a pas été trouvé" si le géne n'est pas trouvé
+		if (genes->trouver(25107) != nullptr) {
+			cout << genes->trouver(25107) << endl;
+		}
+		else {
+			cout << "Le gene 25107 n'a pas ete trouve" << endl;
+		}
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "RETRAIT DU GENE 2290" << endl;
+		// !!!! A FAIRE: retirer le gène 2290
+		// Le programme doit afficher "Le gène a été retiré" si le retrait réussit, 
+		// ou bien "Le gène 2290 n'a pas été trouvé" si le retrait échoue
+		if (genes->retirer(2290)) {
+			cout << "Le gene a ete retire " << endl;
+		}
+		else {
+			cout << "Le gene 2290 n'a pas ete trouve" << endl;
+		}
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "RETRAIT DE L'ESPECE HOMO SAPIENS" << endl;
+		// !!!! A FAIRE: retirer tous les gènes de l'espèce Homo sapiens
+		// Le programme doit afficher le nombre de gènes retirés ("Nombre de genes retires = XX")
+		cout << "Nombre de genes retires =   " << genes->retirerEspece("Homo sapiens") << endl;
+
+
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "RETRAIT DU GENE 552" << endl;
+		// !!!! A FAIRE: retirer le gène 552
+		// Le programme doit afficher "Le gène a été retiré" si le retrait réussit, 
+		// ou bien "Le gène 552 n'a pas été trouvé" si le retrait échoue
+		if (genes->retirer(552)) {
+			cout << "Le gene a ete retire " << endl;
+		}
+		else {
+			cout << "Le gene 552 n'a pas ete trouve" << endl;
+		}
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "MODIFICATION DU NOM DES GENES DE Mus musculus: Avpr1a-->XXXXX, Fmr1-->YYYYY et UwtA1-->ZZZZZ" << endl;
+		// !!!! A FAIRE: modifier le nom des gènes suivants pour l'espèce Mus musculus
+		// Gène Avpr1a --> nouveau nom = "XXXXX"
+		// Gène Fmr1 --> nouveau nom = "YYYYY"
+		// Gène UwtA1 --> nouveau nom = "ZZZZZ"
+		// Le programme doit afficher le nombre de gènes modifiés ("Modification de XX nom(s) effectuée")
+		map<string, string> mapp;
+		mapp.insert(pair<string, string>("Avpr1a", "XXXXX"));
+		mapp.insert(pair<string, string>("Fmr1", "YYYYY"));
+		mapp.insert(pair<string, string>("UwtA1", "ZZZZZ"));
+
+		cout << "Modification de "<< genes->modifierNoms("Mus musculus", mapp) << " nom(s) effectuee " << endl;
+
+
+		cout << "----------------------------------------------------------" << endl;
+		cout << "AFFICHAGE PAR LONGEUR\n" << endl;
+		// !!!! A FAIRE: afficher les gènes par longueur
+
+		genes->afficherParLongueur(cout);
+
+		// !!!! A FAIRE: N'OUBLIEZ PAS DE RÉPONDRE AUX QUESTIONS DANS UN FICHIER TEXTE !!!!
+		
+        delete genes;
+		system("PAUSE");
+		return 0;
+
+}
